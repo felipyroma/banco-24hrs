@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco 24hrs</title>
+</head>
+
+<body>
+    <h1>
+        Banco 24hrs
+    </h1>
+
+    <!-- primeira fase -->
+    <div>
+        <h2>
+            Primeira fase
+        </h2>
+
+        Digite a quantidade de cédulas de R$10,00 <input id="ipt_dez" type="text"> <br><br>
+        Digite a quantidade de cédulas de R$50,00 <input id="ipt_cinquenta" type="text"> <br><br>
+        Digite a quantidade de cédulas de R$100,00 <input id="ipt_cem" type="text">
+
+        <button onclick="iniciar()"> Iniciar </button>
+
+    </div>
+
+
+    <div>
+
+        <!-- segunda fase -->
+        <h2>
+            Segunda fase
+        </h2>
+
+        <p>
+            As notas disponiveis para saque são de 10, 50 e 100 reais.
+        </p>
+
+        Digite o valor de saque <input id="ipt_saque" type="text">
+
+        <button onclick="sacar()"> Solicitar saque </button>
+
+        <div id="res"></div>
+    </div>
+</body>
+<script>
+    var estoqueDez = 0
+    var estoqueCinquenta = 0
+    var estoqueCem = 0
+    var saque = 0
+    var resto = 0
+
+    var total = 0
+
+
+
+    function iniciar() {
+        estoqueDez = Number(ipt_dez.value)
+        estoqueCinquenta = Number(ipt_cinquenta.value)
+        estoqueCem = Number(ipt_cem.value)
+
+        estoqueTotal = (estoqueDez * 10) + (estoqueCinquenta * 50) + (estoqueCem * 100)
+        console.log(estoqueTotal)
+    }
+
+    function sacar100() {
+        var qtd100 = Math.floor(saque / 100)
+        if (saque % 100 == 0 && estoqueCem >= qtd100) {
+            estoqueCem = estoqueCem - qtd100
+            res.innerHTML += `<br><br>A quantidade de cédulas de R$100,00 é igual a ${qtd100}`
+        } else {
+            if (estoqueCem < qtd100) {
+                qtd100 = estoqueCem
+            }
+            resto = saque - (qtd100 * 100)
+            estoqueCem = estoqueCem - qtd100
+            res.innerHTML += `<br><br>A quantidade de cédulas de R$100,00 é igual a ${qtd100}`
+            sacar50()
+        }
+    }
+
+    function sacar50() {
+        if (resto) {
+            valor = resto
+        } else {
+            valor = saque
+        }
+        qtd50 = Math.floor(valor / 50)
+        if (saque % 50 == 0 && estoqueCinquenta >= qtd50) {
+            estoqueCinquenta = estoqueCinquenta - qtd50
+            res.innerHTML += `<br><br>A quantidade de cédulas de R$50,00 é igual a ${qtd50}`
+            // debugger
+        } else {
+            if (estoqueCinquenta < qtd50) {
+                qtd50 = estoqueCinquenta
+            }
+            resto = saque - (qtd50 * 50)
+            estoqueCinquenta = estoqueCinquenta - qtd50
+            res.innerHTML += `<br><br>A quantidade de cédulas de R$50,00 é igual a ${qtd50}`
+            sacar10()
+        }
+
+    }
+
+    function sacar10() {
+        if (resto) {
+            valor = resto
+        } else {
+            valor = saque
+        }
+        qtd10 = Math.floor(valor / 10)
+        if (saque % 10 == 0 && estoqueDez >= qtd10) {
+            estoqueDez = estoqueDez - qtd10
+            res.innerHTML += `<br><br>A quantidade de cédulas de R$10,00 é igual a ${qtd10}`
+            // debugger
+        } else {
+            res.innerHTML = `<br><br>A quantidade e valor das cédulas disponíveis não atende o valor desejado`
+        }
+    }
+
+
+
+    function sacar() {
+        saque = Number(ipt_saque.value)
+        if (saque > 0) {
+
+            if (saque <= estoqueTotal) {
+
+                if (saque % 10 == 0) {
+                    if (saque < 100) {
+                        if (saque < 50) {
+                            sacar10()
+                        } else {
+                            sacar50()
+                        }
+
+                    } else {
+                        sacar100()
+                    }
+
+                } else {
+                    alert('Valor não possível devido às notas disponíveis')
+                }
+            } else {
+                alert('Montante disponível não atende a solicitação')
+            }
+        } else {
+            alert('Não é possível sacar 0 ou menos')
+        }
+
+    }
+
+
+
+
+</script>
+
+</html>
